@@ -1,14 +1,17 @@
 <?php
 
-require 'Validator.php';
+use Core\Database;
+use Core\Validator;
 
-$config = require 'config.php';
+require base_path('Core/Validator.php');
+
+$config = require base_path('config.php');
 $db = new Database($config['database']);
 
-$heading = 'Create Estate';
+$errors = [];
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
-    $errors = [];
+ 
     
     if(! Validator ::string($_POST['name'],4,15)){
         $errors['name'] = 'The name of no more than 15 caracters is required';
@@ -26,4 +29,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     }
 }
 
-require 'views/real_estate-create.view.php';
+view("/real_estates/create.view.php",[
+    'heading' => 'Create Estate',
+    'errors'=> $errors
+]);

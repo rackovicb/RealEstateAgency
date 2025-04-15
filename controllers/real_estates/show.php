@@ -1,10 +1,13 @@
 <?php
 
-$config = require('config.php');
+
+use Core\Database;
+
+
+$config = require base_path('config.php');
 $db = new Database($config['database']);
 
 
-$heading = 'Real Estate';
 $currentUserId = 1;
 
 $real_estate = $db->query('select * from real_estates where id = :id', [
@@ -13,4 +16,8 @@ $real_estate = $db->query('select * from real_estates where id = :id', [
 
 authorize($real_estate['user_id'] === $currentUserId);
 
-require "views/real_estate.view.php";
+
+view("/real_estates/show.view.php",[
+    'heading' => 'Real Estate',
+    'real_estate'=> $real_estate
+]);
