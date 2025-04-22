@@ -16,9 +16,10 @@
         <?=$real_estate['price']?>
         <?=$real_estate['location']?>  
     </p>
-                 
-        
-    </div>
+    <footer class="mt-6">
+        <a href="/real_estate/edit?id=<?= $real_estate['id'] ?>" class="text-gray-500 border border-current px-3 py-1 rounded">Edit</a>
+    </footer>
+
 </main>
 
 <?php require base_path('views/partials/footer.php'); ?>
