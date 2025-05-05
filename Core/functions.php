@@ -45,6 +45,7 @@ function view($path, $attributes = [])
 function login($user)
 {
     $_SESSION['user'] = [
+        'id' => $user['id'],
         'email' => $user['email']
     ];
 

@@ -5,7 +5,7 @@ use Core\Database;
 
 $db = App::resolve(Database::class);
 
-$currentUserId = 1;
+$currentUserId = $_SESSION['user']['id'] ?? null;
 
 
 $real_estate = $db->query('select * from real_estates where id = :id', [

@@ -31,7 +31,8 @@
  if ($user) {
      if (password_verify($password, $user['password'])) {
          login([
-             'email' => $email
+            'id' => $user['id'],
+            'email' => $user['email']
          ]);
  
          header('location: /');

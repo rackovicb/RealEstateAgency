@@ -7,6 +7,7 @@ $router->get('/contact', 'controllers/contact.php');
 
 
 $router->get('/real_estates', 'controllers/real_estates/index.php')->only('auth');
+$router->get('/my-properties', 'controllers/real_estates/mine.php')->only('auth');
 $router->get('/real_estate', 'controllers/real_estates/show.php');
 $router->delete('/real_estate', 'controllers/real_estates/destroy.php');
 
