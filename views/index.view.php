@@ -4,18 +4,18 @@
 
 <main>
     <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
-        <form method="GET" class="mb-6 text-center">
-            <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Filter by location:</label>
-            <select name="location" id="location" class="rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <option value="">Show all</option>
-                <option value="Beograd" <?= $_GET['location'] ?? '' === 'Beograd' ? 'selected' : '' ?>>Beograd</option>
-                <option value="Novi Sad" <?= $_GET['location'] ?? '' === 'Novi Sad' ? 'selected' : '' ?>>Novi Sad</option>
-                <option value="Kragujevac" <?= $_GET['location'] ?? '' === 'Kragujevac' ? 'selected' : '' ?>>Kragujevac</option>
-                <option value="Cacak" <?= $_GET['location'] ?? '' === 'Cacak' ? 'selected' : '' ?>>Cacak</option>
-                <option value="Nis" <?= $_GET['location'] ?? '' === 'Nis' ? 'selected' : '' ?>>Niš</option>
-            </select>
-            <button type="submit" class="ml-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm">Search</button>
-        </form>
+    <form method="GET" class="mb-6 text-center">
+        <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Filter by location:</label>
+        <select name="location" id="location" class="rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            <option value="">Show all</option>
+            <?php foreach ($locations as $location): ?>
+                <option value="<?= $location ?>" <?= $selectedLocation === $location ? 'selected' : '' ?>>
+                    <?= $location ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+        <button type="submit" class="ml-2 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm">Search</button>
+    </form>
 
         <h2 class="text-2xl font-bold mb-4 text-center">Estates by city:</h2>
         <?php if (!empty($locationStats)) : ?>
@@ -23,7 +23,7 @@
                 <?php foreach ($locationStats as $stat): ?>
                     <li>
                         <strong><?= htmlspecialchars($stat['location']) ?>:</strong>
-                        <?= htmlspecialchars($stat['count']) ?>Estate
+                        <?= htmlspecialchars($stat['count']) ?> Estate
                     </li>
                 <?php endforeach; ?>
             </ul>
@@ -52,13 +52,47 @@
                         <strong>Description:</strong> <?= htmlspecialchars($real_estate['description']) ?>
                     </p>
 
-                    <a href="/real_estate?id=<?= $real_estate['id'] ?>" 
-                       class="text-indigo-600 hover:underline text-sm">View details</a>
+                    <!-- <a href="/real_estate?id=<?= $real_estate['id'] ?>" 
+                       class="text-indigo-600 hover:underline text-sm">View details</a> -->
+
+                    <?php if ($_SESSION['user'] ?? false): ?>
+                        <button 
+                            class="add-to-favorites mt-2 text-sm text-red-600 hover:underline" 
+                            data-id="<?= $real_estate['id'] ?>">
+                             Add to Favorites
+                        </button>
+                    <?php endif; ?>
                 </div>
             <?php endforeach; ?>
         </div>
-
     </div>
 </main>
 
 <?php require base_path('views/partials/footer.php'); ?>
+
+<script>
+    document.querySelectorAll('.add-to-favorites').forEach(button => {
+        button.addEventListener('click', function () {
+            const realEstateId = this.dataset.id;
+
+            fetch('/favorites', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ real_estate_id: realEstateId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Added to favorites!');
+                } else {
+                    alert(data.message || 'Already in favorites or error occurred.');
+                }
+            })
+            .catch(() => {
+                alert('Something went wrong.');
+            });
+        });
+    });
+</script>

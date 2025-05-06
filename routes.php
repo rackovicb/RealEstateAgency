@@ -25,3 +25,8 @@ $router->post('/register', 'controllers/registration/store.php')->only('guest');
 $router->get('/login', 'controllers/session/create.php')->only('guest');
 $router->post('/session', 'controllers/session/store.php')->only('guest');
 $router->delete('/session', 'controllers/session/destroy.php')->only('auth');
+
+$router->post('/favorites', 'controllers/favorites/store.php')->only('auth');
+$router->get('/favorites', 'controllers/favorites/index.php')->only('auth');
+$router->delete('/favorites', 'controllers/favorites/destroy.php')->only('auth');
+

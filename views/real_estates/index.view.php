@@ -40,8 +40,8 @@
                         <strong>Description:</strong> <?= htmlspecialchars($real_estate['description']) ?>
                     </p>
 
-                    <a href="/real_estate?id=<?= $real_estate['id'] ?>" 
-                       class="text-indigo-600 hover:underline text-sm">View details</a>
+                    <!-- <a href="/real_estate?id=<?= $real_estate['id'] ?>" 
+                       class="text-indigo-600 hover:underline text-sm">View details</a> -->
                 </div>
             <?php endforeach; ?>
         </div>

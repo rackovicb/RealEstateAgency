@@ -5,12 +5,13 @@ use Core\Database;
 
 $db = App::resolve(Database::class);
 
-$location = $_GET['location'] ?? null;
+$locations = ['Beograd', 'Novi Sad', 'Kragujevac', 'Cacak', 'Nis'];
+$selectedLocation = $_GET['location'] ?? '';
 
-if ($location) {
+if ($selectedLocation) {
     $real_estates = $db->query(
         "SELECT * FROM real_estates WHERE location = :location", 
-        ['location' => $location]
+        ['location' => $selectedLocation]
     )->get();
 } else {
     $real_estates = $db->query("SELECT * FROM real_estates")->get();
@@ -25,5 +26,7 @@ $locationStats = $db->query("
 view("index.view.php", [
     'heading' => 'Welcome',
     'real_estates' => $real_estates,
-    'locationStats' => $locationStats
+    'locationStats' => $locationStats,
+    'locations' => $locations,                     
+    'selectedLocation' => $selectedLocation     
 ]);

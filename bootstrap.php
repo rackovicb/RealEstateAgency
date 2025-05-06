@@ -1,5 +1,11 @@
 <?php
 
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+
 use Core\App;
 use Core\Container;
 use Core\Database;
@@ -14,5 +20,3 @@ $container -> bind('Core\Database', function (){
 });
 
 App::setContainer($container);
-
-//$db = $container->resolve('Core\Database');

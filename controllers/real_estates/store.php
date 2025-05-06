@@ -4,6 +4,8 @@ use Core\App;
 use Core\Validator;
 use Core\Database;
 
+require base_path('bootstrap.php');
+
 $db = App::resolve(Database::class);
 
 $errors = [];
