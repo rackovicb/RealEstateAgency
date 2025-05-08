@@ -52,14 +52,15 @@
                         <strong>Description:</strong> <?= htmlspecialchars($real_estate['description']) ?>
                     </p>
 
-                    <!-- <a href="/real_estate?id=<?= $real_estate['id'] ?>" 
-                       class="text-indigo-600 hover:underline text-sm">View details</a> -->
-
                     <?php if ($_SESSION['user'] ?? false): ?>
+                        <?php
+                            $isFavorited = in_array($real_estate['id'], $favorites ?? []);
+                        ?>
                         <button 
-                            class="add-to-favorites mt-2 text-sm text-red-600 hover:underline" 
-                            data-id="<?= $real_estate['id'] ?>">
-                             Add to Favorites
+                            class="toggle-favorite mt-2 text-sm <?= $isFavorited ? 'text-green-600' : 'text-red-600' ?> hover:underline"
+                            data-id="<?= $real_estate['id'] ?>"
+                            data-favorited="<?= $isFavorited ? '1' : '0' ?>">
+                            <?= $isFavorited ? 'Added to Favorites' : 'Add to Favorites' ?>
                         </button>
                     <?php endif; ?>
                 </div>
@@ -71,12 +72,13 @@
 <?php require base_path('views/partials/footer.php'); ?>
 
 <script>
-    document.querySelectorAll('.add-to-favorites').forEach(button => {
+    document.querySelectorAll('.toggle-favorite').forEach(button => {
         button.addEventListener('click', function () {
             const realEstateId = this.dataset.id;
+            const isFavorited = this.dataset.favorited === '1';
 
             fetch('/favorites', {
-                method: 'POST',
+                method: isFavorited ? 'DELETE' : 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -85,9 +87,13 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Added to favorites!');
+                    const newText = isFavorited ? 'Add to Favorites' : 'Added to Favorites';
+                    this.textContent = newText;
+                    this.dataset.favorited = isFavorited ? '0' : '1';
+                    this.classList.toggle('text-red-600');
+                    this.classList.toggle('text-green-600');
                 } else {
-                    alert(data.message || 'Already in favorites or error occurred.');
+                    alert(data.message || 'Error occurred.');
                 }
             })
             .catch(() => {

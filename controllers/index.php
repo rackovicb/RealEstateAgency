@@ -6,7 +6,7 @@ use Core\Database;
 $db = App::resolve(Database::class);
 
 $locations = ['Beograd', 'Novi Sad', 'Kragujevac', 'Cacak', 'Nis'];
-$selectedLocation = $_GET['location'] ?? '';
+$selectedLocation = $_GET['location'] ?? null;
 
 if ($selectedLocation) {
     $real_estates = $db->query(
@@ -23,10 +23,23 @@ $locationStats = $db->query("
     GROUP BY location
 ")->get();
 
+$favorites = [];
+
+if (isset($_SESSION['user'])) {
+    $userId = $_SESSION['user']['id'];
+    $favoriteRecords = $db->query(
+        "SELECT real_estate_id FROM favorites WHERE user_id = :user_id",
+        ['user_id' => $userId]
+    )->get();
+
+    $favorites = array_column($favoriteRecords, 'real_estate_id');
+}
+
 view("index.view.php", [
     'heading' => 'Welcome',
     'real_estates' => $real_estates,
     'locationStats' => $locationStats,
     'locations' => $locations,                     
-    'selectedLocation' => $selectedLocation     
+    'selectedLocation' => $selectedLocation,
+    'favorites'=> $favorites     
 ]);
